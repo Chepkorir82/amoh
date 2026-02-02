@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Be My Valentine 💘</title>
+
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #ff758c, #ff7eb3);
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px;
+      color: #fff;
+      overflow-y: auto; /* ENABLE SCROLLING */
+    }
+
+    .name {
+      font-size: 3rem;
+      font-weight: bold;
+      animation: glow 2s ease-in-out infinite alternate,
+                 bounce 2.5s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff3366; }
+      to { text-shadow: 0 0 30px #fff, 0 0 60px #ff3366; }
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .box {
+      background: rgba(255,255,255,0.2);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 520px;
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    button {
+      font-size: 1.1rem;
+      padding: 12px 25px;
+      margin: 15px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    .yes {
+      background-color: #ff3366;
+      color: white;
+    }
+
+    .no {
+      background-color: #ddd;
+      color: #333;
+      position: absolute;
+    }
+
+    #countdown {
+      font-size: 1.3rem;
+      margin: 15px 0;
+    }
+
+    .hidden { display: none; }
+
+    p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    .heart {
+      position: absolute;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(1); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+
+    .firework {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: explode 1s ease-out forwards;
+    }
+
+    @keyframes explode {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(6); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- REMOVE old audio — we’ll use YouTube instead -->
+
+<div class="box" id="start">
+  <div class="name">HIS_NAME_HERE 💕</div>
+  <p>I made something special just for you 😌</p>
+  <button class="yes" onclick="startGame()">Start 🎮</button>
+</div>
+
+<div class="box hidden" id="game">
+  <h1>Quick Question 😏</h1>
+  <p>Do you like surprises?</p>
+  <button class="yes" onclick="winGame()">Yes 💖</button>
+  <button class="no" id="noBtn" onclick="fakeError()" onmouseover="moveNo()">No 🙄</button>
+</div>
+
+<div class="box hidden" id="valentine">
+  <h1>Will you be my Valentine? 💘</h1>
+  <div id="countdown"></div>
+  <button class="yes" onclick="showLetter()">YES 💞</button>
+</div>
+
+<div class="box hidden" id="letter">
+  <h1>My Love Letter 💌</h1>
+  <p>
+    Dear HIS_NAME_HERE,<br><br>
+
+    I don’t think you fully realize how much you mean to me.
+    You walked into my life and somehow made ordinary days feel
+    brighter, calmer, and more meaningful. When I think of comfort,
+    laughter, and happiness — I think of you.<br><br>
+
+    You inspire me to be softer, stronger, and more myself.
+    You make me smile without trying, and you make my heart feel safe.
+    Loving you feels easy, natural, and right 💕<br><br>
+
+    This Valentine’s Day isn’t just about flowers or chocolates.
+    It’s about choosing you — again and again.
+    Thank you for being my person, my peace, and my favorite surprise.<br><br>
+
+    With all my love,<br>
+    ❤️ Yours, always
+  </p>
+
+  <p style="margin-top:25px; font-weight:bold;">
+    📸 Screenshot this and send it to me 😏💖
+  </p>
+
+  <!-- YOUTUBE EMBED for “That Part” -->
+  <div id="videoContainer" style="margin-top:20px;"></div>
+</div>
+
+<script>
+  function startGame() {
+    document.getElementById("start").classList.add("hidden");
+    document.getElementById("game").classList.remove("hidden");
+
+    // ADD the YouTube player dynamically so it only loads after user interaction
+    document.getElementById("videoContainer").innerHTML = `
+      <iframe
+        width="360"
+        height="215"
+        src="https://www.youtube.com/embed/LTCBgWFoUmc?autoplay=1&loop=1&playlist=LTCBgWFoUmc"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    `;
+  }
+
+  function moveNo() {
+    const btn = document.getElementById("noBtn");
+    btn.style.left = Math.random() * 80 + "%";
+    btn.style.top = Math.random() * 80 + "%";
+  }
+
+  function fakeError() {
+    alert(
+      "⚠️ SYSTEM ERROR ⚠️\n\n" +
+      "Option 'NO' is unavailable.\n" +
+      "Reason: You are already loved ❤️\n\n" +
+      "Please select YES to continue."
+    );
+  }
+
+  function winGame() {
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("valentine").classList.remove("hidden");
+  }
+
+  function showLetter() {
+    document.getElementById("valentine").classList.add("hidden");
+    document.getElementById("letter").classList.remove("hidden");
+    startHearts();
+    startFireworks();
+  }
+
+  const countdown = document.getElementById("countdown");
+  const valentinesDay = new Date(new Date().getFullYear(), 1, 14).getTime();
+
+  setInterval(() => {
+    const now = new Date().getTime();
+    const distance = valentinesDay - now;
+    if (distance < 0) {
+      countdown.innerHTML = "It's Valentine’s Day 💖";
+      return;
+    }
+    const days = Math.floor(distance / (1000*60*60*24));
+    const hours = Math.floor((distance / (1000*60*60)) % 24);
+    const minutes = Math.floor((distance / (1000*60)) % 60);
+    countdown.innerHTML =
+      `⏳ ${days} days ${hours} hrs ${minutes} mins to Valentine’s Day`;
+  }, 1000);
+
+  function startHearts() {
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 15 + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }, 300);
+  }
+
+  function startFireworks() {
+    setInterval(() => {
+      const fw = document.createElement("div");
+      fw.classList.add("firework");
+      fw.style.left = Math.random() * 100 + "vw";
+      fw.style.top = Math.random() * 100 + "vh";
+      fw.style.background =
+        `hsl(${Math.random()*360}, 100%, 70%)`;
+      document.body.appendChild(fw);
+      setTimeout(() => fw.remove(), 1000);
+    }, 200);
+  }
+</script>
+
+</body>
+</html>
